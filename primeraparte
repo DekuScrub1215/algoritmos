@@ -1,0 +1,148 @@
+#pragma once
+#include "iostream"
+#include <string.h>
+#include <string>
+#include <fstream>
+#include <iomanip>
+#include <ctime>
+#include <sstream>
+
+using namespace std;
+using namespace System::Drawing;
+using namespace System::Windows::Forms;
+
+class Cserpiente {
+private:
+	int x, y, dx, dy;
+	int vidas;
+	int nivel;
+	char direccion;
+
+public:
+	Cserpiente() {
+		x = y = 350;
+		vidas = 3;
+		nivel = 1;
+		direccion = 'N';
+		dx = 0;
+		dy = 0;
+	}
+
+	void dibujar(Graphics^ bmp) {
+		bmp->FillRectangle(Brushes::Gold, x, y, 25, 25);
+		bmp->DrawRectangle(Pens::Gold, x, y, 25, 25);
+		bmp->FillEllipse(Brushes::Yellow, x + 5, y + 5, 15, 15);
+		bmp->DrawEllipse(Pens::Black, x + 5, y + 5, 15, 15);
+	}
+
+	void Set_Direccion(KeyEventArgs^ e) {
+		e->Handled = true;
+		e->SuppressKeyPress = true;
+		switch (e->KeyValue)
+		{
+		case 'W':direccion = e->KeyValue; break;
+		case 'S':direccion = e->KeyValue; break;
+		case 'A':direccion = e->KeyValue; break;
+		case 'D':direccion = e->KeyValue; break;
+		default: break;
+		}
+	}
+
+	void mover() {
+		switch (direccion)
+		{
+		case 'W': {
+			dx = 0;
+			if (dy == 0) {
+				dy = -25;
+			}
+				y += dy;
+				break;
+		}
+		case 'S': {
+			dx = 0;
+			if (dy == 0) {
+				dy = 25;
+				if (dy == -25) {
+					y += dy;
+					break;
+				}
+				else {
+					y += dy;
+					break;
+				}
+			}
+			else {
+				y += dy;
+			}
+			break;
+		}
+
+		case 'A': {
+			dy = 0;
+			if (dx == 0) {
+				dx = -25;
+			}
+				x += dx;
+				break;
+		}
+		case 'D': {
+			dy = 0;
+			if (dx == 0) {
+				dx = 25;
+				if (dx == -25) {
+					x += dx; break;
+				}
+				else {
+					x += dx; break;
+				}
+			}
+		}
+		default:break;
+		}
+	}
+
+	bool colision() {
+		switch (x){
+		case 725: return true;
+		case -25: return true;
+		}
+
+		switch (y) {
+		case 725: return true;
+		case -25:return true;
+		}
+		return false;
+	}
+
+	void muerte(System::String^ causa) {
+		direccion = 'N';
+		x = y = 350;
+		vidas--;
+		if (vidas == 0) {
+			exit(0);
+		}
+	}
+
+	void nnivel() {
+		++nivel;
+		x = y = 350;
+		direccion = 'N';
+	}
+
+	int Get_x() { return x; }
+	int Get_y() { return y; }
+	int Get_nivel() { return nivel; }
+	int Get_vidas() { return vidas; }
+	void Set_nivel(int value) { nivel = value; }
+	void Set_vidas(int value) { vidas = value; }
+	void Set_dxy(int value_dx, int value_dy) {
+		this->dx = value_dx;
+		this->dy = value_dy;
+	}
+	void Set_xy(int value_x, int value_y) {
+		this->x = value_x;
+		this->y = value_y;
+	}
+	//Falta guardar y morir
+};
